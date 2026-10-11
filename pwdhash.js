@@ -16,8 +16,26 @@ function Init() {
   document.hashform.domain.value = "http://www.example.com/";
   document.hashform.sitePassword.value = "";
   document.hashform.hashedPassword.value = "";
-  document.hashform.hashedPassword.placeholder = "Press Generate";
+  document.hashform.hashedPassword.placeholder = "Type to generate";
   document.hashform.hashedPassword.disabled = true;
+  // live generation: recompute while the user types
+  if (document.hashform.domain.addEventListener)
+    document.hashform.domain.addEventListener('input', UpdateHash);
+  if (document.hashform.sitePassword.addEventListener)
+    document.hashform.sitePassword.addEventListener('input', UpdateHash);
+}
+
+/*
+ * Regenerate the hash live while the form is being filled.
+ * An empty site password clears the output (never hash an empty password).
+ */
+function UpdateHash() {
+  if (!document.hashform || !document.hashform.sitePassword) return;
+  if (document.hashform.sitePassword.value == "") {
+    document.hashform.hashedPassword.value = "";
+    return;
+  }
+  GenerateToTextField();
 }
 
 var SPH_kPasswordPrefix = "@@";
@@ -30,6 +48,7 @@ function setCaseInsensitive(v) {
   SPH_caseInsensitive = !!v;
   var cb = document.getElementById('caseSwitch');
   if (cb) cb.checked = SPH_caseInsensitive;
+  UpdateHash();
 }
 
 var SPH_stripProtocol = true;
@@ -40,6 +59,7 @@ function setStripProtocol(v) {
   SPH_stripProtocol = !!v;
   var cb = document.getElementById('stripSwitch');
   if (cb) cb.checked = SPH_stripProtocol;
+  UpdateHash();
 }
 
 var SPH_revealed = false;
@@ -92,6 +112,7 @@ function setAlgorithm(v) {
   if (cb) cb.checked = (SPH_algorithm == 'v2');
   var badge = document.getElementById('algoBadge');
   if (badge) badge.textContent = SPH_algorithm;
+  UpdateHash();
 }
 
 /*

@@ -41,7 +41,8 @@ over valid, auto-renewed HTTPS with enforced HTTPS redirect.
 ## Usage
 
 Type the **site address** (e.g. `example.com`) and your **master password**;
-the tool shows the generated site password. The browser extensions apply the
+the hash appears **as you type** (no Generate button) and can be revealed with
+the eye button or copied with the copy button. The browser extensions apply the
 same transformation transparently:
 [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pwdhash/) ·
 [Chrome](https://chrome.google.com/extensions/detail/dnfmcfhnhnpoehjoommondmlmhdoonca).

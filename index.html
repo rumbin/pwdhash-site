@@ -23,7 +23,7 @@
       computed entirely in your browser, nothing is ever sent anywhere.</p>
 
     <form name="hashform" action="error.html" method="POST"
-          onsubmit="setTimeout('GenerateToTextField()', 0); return false;">
+          onsubmit="UpdateHash(); return false;">
       <div class="step">
         <h2><label for="f-domain">Site Address</label></h2>
         <input type="text" id="f-domain" name="domain"
@@ -92,7 +92,6 @@
             </svg>
             <span class="btn-label">Copy</span>
           </button>
-          <button type="submit" class="generate-btn">Generate</button>
         </div>
       </div>
     </form>

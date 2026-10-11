@@ -136,6 +136,6 @@ kbd {
 .footnote { font-size: .8rem; }
 
 @media (max-width: 30rem) {
-  .generate-row { flex-direction: column; }
-  button { width: 100%; }
+  .generate-row { flex-wrap: wrap; }
+  .generate-row input { flex-basis: 100%; }
 }

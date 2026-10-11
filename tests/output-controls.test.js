@@ -55,6 +55,6 @@ describe('hashed password output controls', () => {
     window.Init()
     const field = document.hashform.hashedPassword
     expect(field.value).toBe('')
-    expect(field.placeholder).toBe('Press Generate')
+    expect(field.placeholder).toBe('Type to generate')
   })
 })

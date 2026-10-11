@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1791747482429" clover="3.2.0">
+  <project timestamp="1791747482429" name="All files">
+    <metrics statements="11" coveredstatements="11" conditionals="8" coveredconditionals="8" methods="4" coveredmethods="4" elements="23" coveredelements="23" complexity="0" loc="11" ncloc="11" packages="1" files="1" classes="1"/>
+    <file name="loadLegacy.js" path="/home/biephi/hermine/pwdhash-site/tests/helpers/loadLegacy.js">
+      <metrics statements="11" coveredstatements="11" conditionals="8" coveredconditionals="8" methods="4" coveredmethods="4"/>
+      <line num="4" count="7" type="stmt"/>
+      <line num="7" count="33" type="stmt"/>
+      <line num="8" count="132" type="stmt"/>
+      <line num="10" count="132" type="stmt"/>
+      <line num="15" count="13" type="stmt"/>
+      <line num="16" count="13" type="stmt"/>
+      <line num="23" count="37" type="stmt"/>
+      <line num="40" count="37" type="stmt"/>
+      <line num="41" count="37" type="stmt"/>
+      <line num="42" count="259" type="cond" truecount="4" falsecount="0"/>
+      <line num="43" count="336" type="stmt"/>
+    </file>
+  </project>
+</coverage>

@@ -20,21 +20,12 @@ export function loadExtended() {
 // and SPH_kPasswordPrefix (pwdhash.js).
 
 export function mountForm({ domain = '', sitePassword = '', hashedPassword = '' } = {}) {
-  document.body.innerHTML = `
-    <form name="hashform">
-      <input name="domain" value="${domain}" />
-      <input name="sitePassword" type="password" value="${sitePassword}" />
-      <input name="hashedPassword" id="f-hashedPassword" type="password"
-             value="${hashedPassword}" readonly />
-      <button type="button" id="revealBtn" onclick="toggleReveal()"
-              aria-label="Reveal password" aria-pressed="false">eye</button>
-      <button type="button" id="copyBtn" onclick="copyHashedPassword()">Copy</button>
-      <label><input type="checkbox" id="caseSwitch" checked
-        onchange="setCaseInsensitive(this.checked)" /></label>
-      <label><input type="checkbox" id="algoSwitch"
-        onchange="setAlgorithm(this.checked ? 'v2' : 'v1')" /></label>
-      <span id="algoBadge">v1</span>
-    </form>`
+  // Mount the REAL form from index.html — no duplicated fixture that can drift
+  // from production markup. Values are set afterwards (the form ships empty).
+  const html = readFileSync(join(root, 'index.html'), 'utf8')
+  const formHtml = html.match(/<form[\s\S]*?<\/form>/)[0]
+  document.body.innerHTML = formHtml
+
   // jsdom lacks named form-control access (form.domain); browsers have it.
   // Shim it so unmodified legacy code (document.hashform.domain.value) works.
   const form = document.forms[0]
@@ -43,4 +34,8 @@ export function mountForm({ domain = '', sitePassword = '', hashedPassword = '' 
       Object.defineProperty(form, ctl.name, { get: () => form.elements[ctl.name] })
     }
   }
+
+  form.domain.value = domain
+  form.sitePassword.value = sitePassword
+  form.hashedPassword.value = hashedPassword
 }

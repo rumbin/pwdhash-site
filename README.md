@@ -57,6 +57,10 @@ typing `example.com` give the same password. Unlike upstream, the strip is
 case-insensitive, so an upper/mixed-case protocol like `HTTPS://` cannot leak
 into the domain and silently produce a different password.
 
+The `@@` activation prefix (used by the browser extensions) is stripped
+**once**, at the form layer, and applies equally to v1 and v2 — a master
+password like `@@@@x` is hashed as `@@x` in both algorithms.
+
 Tip (from upstream): you can save the page to disk and use it offline.
 
 ## Algorithms
@@ -64,11 +68,19 @@ Tip (from upstream): you can save the page to disk and use it offline.
 - **v1 (default)** — classic Stanford PwdHash: `b64_hmac_md5(password, domain)`
   with constraint tweaks. Identical output to the official browser extensions:
   every existing derived password keeps working.
+  ⚠️ **Use ASCII master passwords with v1.** The upstream MD5 implementation
+  keys on the *low byte* of each UTF-16 character, so non-ASCII masters lose
+  entropy and different characters can collide (`ä` and `Ǥ` produce identical
+  hashes). This is unfixable without breaking compatibility with the
+  extensions. (v2 has no such limitation.)
 - **v2 (opt-in switch)** — fork-local extension with a larger output alphabet
   (86 chars: `A-Z a-z 0-9` plus `!@#$%^&*()-_=+[]{}:;,.?/`), always containing
   one upper, lower, digit and special character, and roughly twice the length
   of the input password (minimum 12). Drawn by unbiased rejection sampling from
-  HMAC-MD5 blocks tagged `PwdHash-2|<domain>|<counter>`.
+  HMAC-MD5 blocks tagged `PwdHash-2|<domain>|<counter>`. Master password and
+  message are keyed as **UTF-8**, so non-ASCII masters are handled correctly
+  and the hash is reproducible from any implementation of the spec
+  (length is measured in UTF-16 code units, JS string semantics).
   ⚠️ **v2 output is only reproducible with v2-capable tooling** (this site, or
   anything implementing the spec in `extended-hashed-password.js`) — the
   Stanford browser extensions cannot regenerate v2 passwords. The UI shows a

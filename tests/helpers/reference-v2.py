@@ -1,14 +1,20 @@
 import hmac, hashlib
+import sys
 
 # PwdHash v2 reference implementation (independent of the JS code).
 # Spec:
-#   - strip leading '@@' from the password (v1 semantics)
-#   - L = max(12, 2n + 2) where n = length of effective password
-#   - stream = HMAC-MD5(key=password, data="PwdHash-2|{realm}|{i}") for i = 0,1,2,...
+#   - the password is used LITERALLY ('@@' stripping is the form layer's job)
+#   - L = max(12, 2n + 2) where n = length of the password in UTF-16 code units
+#     (JS string semantics; len(pw.encode('utf-16-le')) // 2 in Python)
+#   - stream = HMAC-MD5(key=password.encode('utf-8'),
+#                        data="PwdHash-2|{realm}|{i}".encode('utf-8')) for i = 0,1,2,...
 #   - rejection-sample chars: accept byte b iff b < (256 // len(set)) * len(set)
 #   - force positions 0..3 to one lower/upper/digit/special, then Fisher-Yates
 #     shuffle over all L positions with unbiased indices from the same stream
-import sys
+#
+# Non-ASCII: key and message are UTF-8. For lone surrogates (impossible in
+# normal DOM input) the JS uses WTF-8 (3-byte form); match with
+# pw.encode('utf-8', 'surrogatepass').
 
 ALPHABET_L = "abcdefghijklmnopqrstuvwxyz"
 ALPHABET_U = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -17,9 +23,14 @@ ALPHABET_S = "!@#$%^&*()-_=+[]{}:;,.?/"
 ALPHABET = ALPHABET_L + ALPHABET_U + ALPHABET_D + ALPHABET_S
 
 
+def utf16_len(s):
+    return len(s.encode("utf-16-le")) // 2
+
+
 def stream(password, realm, n_blocks):
+    key = password.encode("utf-8", "surrogatepass")
     return b"".join(
-        hmac.new(password.encode(), f"PwdHash-2|{realm}|{i}".encode(), hashlib.md5).digest()
+        hmac.new(key, f"PwdHash-2|{realm}|{i}".encode("utf-8", "surrogatepass"), hashlib.md5).digest()
         for i in range(n_blocks)
     )
 
@@ -49,9 +60,7 @@ class R:
 
 
 def v2(password, realm):
-    if password.startswith("@@"):
-        password = password[2:]
-    n = len(password)
+    n = utf16_len(password)
     L = max(12, 2 * n + 2)
     r = R(stream(password, realm, L + 16))
     chars = [r.draw(ALPHABET) for _ in range(L)]

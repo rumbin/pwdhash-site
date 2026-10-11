@@ -18,9 +18,26 @@ describe('v2 extended hashing', () => {
       .toBe('qjV2sw&:b5zirjIx.@Pge?')
   })
 
-  it('strips the @@ prefix like v1', () => {
+  it('uses the password literally (@@ stripping belongs to the form layer)', () => {
+    // regression: the function used to strip '@@' a second time, so the form
+    // and the function disagreed with v1 for '@@@@...' master passwords
     expect(SPH_ExtendedHashedPassword('@@test', 'example.com'))
-      .toBe(SPH_ExtendedHashedPassword('test', 'example.com'))
+      .toBe('ZUe1mSsQsq}Y(N')
+    expect(SPH_ExtendedHashedPassword('@@test', 'example.com'))
+      .not.toBe(SPH_ExtendedHashedPassword('test', 'example.com'))
+  })
+
+  it('is reproducible for non-ASCII master passwords (UTF-8 keying)', () => {
+    // regression: core_hmac_md5 keys on the low byte of each UTF-16 unit,
+    // the Python reference on UTF-8 — the JS now encodes UTF-8 explicitly
+    expect(SPH_ExtendedHashedPassword('päss', 'example.com')).toBe('WWsY.SR2QNd)')
+    expect(SPH_ExtendedHashedPassword('päss', 'beispiel.de')).toBe('f}ZU,b9g$_3$')
+  })
+
+  it('measures length in UTF-16 code units (astral chars count 2)', () => {
+    // 'café😀' = 6 UTF-16 units -> L = 2*6+2 = 14
+    expect(SPH_ExtendedHashedPassword('café😀', 'example.com'))
+      .toBe('{Ko5Oz[JiNa;aM')
   })
 
   it('always contains one upper, lower, digit and special', () => {

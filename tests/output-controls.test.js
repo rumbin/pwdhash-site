@@ -43,11 +43,11 @@ describe('hashed password output controls', () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true,
     })
-    const btn = document.getElementById('copyBtn')
+    const label = document.querySelector('#copyBtn .btn-label')
     await copyHashedPassword()
-    expect(btn.textContent).toBe('Copied!')
+    expect(label.textContent).toBe('Copied!')
     vi.advanceTimersByTime(1500)
-    expect(btn.textContent).toBe('Copy')
+    expect(label.textContent).toBe('Copy')
   })
 
   it('Init shows the hint as placeholder so it stays readable while masked', () => {

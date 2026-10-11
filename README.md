@@ -50,6 +50,13 @@ The **Case-insensitive site address** switch (on by default) lowercases the site
 address before hashing, matching the browser extension; turn it off only to
 reproduce passwords generated with mixed-case addresses in the old form.
 
+The **Strip http(s)://** switch (on by default) removes the protocol prefix
+from the site address before hashing, so pasting `https://example.com/...` and
+typing `example.com` give the same password (the browser extension always works
+from the bare hostname). It also fixes an upstream quirk where an
+upper/mixed-case protocol like `HTTPS://` leaked into the domain and produced a
+different password.
+
 Tip (from upstream): you can save the page to disk and use it offline.
 
 ## Algorithms

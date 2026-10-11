@@ -31,6 +31,16 @@ function setCaseInsensitive(v) {
   if (cb) cb.checked = SPH_caseInsensitive;
 }
 
+var SPH_stripProtocol = true;
+
+function isStripProtocol() { return SPH_stripProtocol; }
+
+function setStripProtocol(v) {
+  SPH_stripProtocol = !!v;
+  var cb = document.getElementById('stripSwitch');
+  if (cb) cb.checked = SPH_stripProtocol;
+}
+
 var SPH_algorithm = 'v1';
 
 function getAlgorithm() { return SPH_algorithm; }
@@ -49,6 +59,8 @@ function setAlgorithm(v) {
 function Generate()
 {
   var uri = document.hashform.domain.value;
+  if (SPH_stripProtocol)
+    uri = uri.replace(/^https?:\/\//i, '');
   var domain = (new SPH_DomainExtractor()).extractDomain(uri);
   if (SPH_caseInsensitive)
     domain = domain.toLowerCase();

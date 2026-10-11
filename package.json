@@ -1,0 +1,26 @@
+{
+  "name": "pwdhash-site",
+  "version": "1.0.0",
+  "description": "A self-hosted fork of the Stanford **PwdHash** remote web form, served at **[https://pwdhash.leufke.de](https://pwdhash.leufke.de)** via GitHub Pages.",
+  "main": "domain-extractor.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rumbin/pwdhash-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rumbin/pwdhash-site/issues"
+  },
+  "homepage": "https://github.com/rumbin/pwdhash-site#readme",
+  "devDependencies": {
+    "jsdom": "^30.1.2",
+    "vitest": "^5.0.3"
+  },
+  "private": true
+}

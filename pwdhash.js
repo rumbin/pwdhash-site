@@ -21,6 +21,16 @@ function Init() {
 
 var SPH_kPasswordPrefix = "@@";
 
+var SPH_caseInsensitive = true;
+
+function isCaseInsensitive() { return SPH_caseInsensitive; }
+
+function setCaseInsensitive(v) {
+  SPH_caseInsensitive = !!v;
+  var cb = document.getElementById('caseSwitch');
+  if (cb) cb.checked = SPH_caseInsensitive;
+}
+
 /*
  * Returns a conforming hashed password generated from the form's field values.
  */
@@ -28,6 +38,8 @@ function Generate()
 {
   var uri = document.hashform.domain.value;
   var domain = (new SPH_DomainExtractor()).extractDomain(uri);
+  if (SPH_caseInsensitive)
+    domain = domain.toLowerCase();
   var size = SPH_kPasswordPrefix.length;
   var data = document.hashform.sitePassword.value;
   if (data.substring(0, size) == SPH_kPasswordPrefix)

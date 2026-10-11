@@ -16,6 +16,9 @@ export function loadExtended() {
   ;(0, eval)(src)
 }
 
+// NB: loadLegacy() must run first — v2 reuses core_hmac_md5 (md5.js)
+// and SPH_kPasswordPrefix (pwdhash.js).
+
 export function mountForm({ domain = '', sitePassword = '', hashedPassword = '' } = {}) {
   document.body.innerHTML = `
     <form name="hashform">

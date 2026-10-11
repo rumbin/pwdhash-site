@@ -24,7 +24,11 @@ export function mountForm({ domain = '', sitePassword = '', hashedPassword = '' 
     <form name="hashform">
       <input name="domain" value="${domain}" />
       <input name="sitePassword" type="password" value="${sitePassword}" />
-      <input name="hashedPassword" value="${hashedPassword}" />
+      <input name="hashedPassword" id="f-hashedPassword" type="password"
+             value="${hashedPassword}" readonly />
+      <button type="button" id="revealBtn" onclick="toggleReveal()"
+              aria-label="Reveal password" aria-pressed="false">eye</button>
+      <button type="button" id="copyBtn" onclick="copyHashedPassword()">Copy</button>
       <label><input type="checkbox" id="caseSwitch" checked
         onchange="setCaseInsensitive(this.checked)" /></label>
       <label><input type="checkbox" id="stripSwitch" checked

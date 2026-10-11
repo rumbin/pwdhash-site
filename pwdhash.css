@@ -62,8 +62,32 @@ input[type="text"], input[type="password"] {
 }
 input[readonly] { opacity: .9; }
 
-.generate-row { display: flex; gap: .6rem; }
-.generate-row input { flex: 1; }
+.generate-row { display: flex; gap: .6rem; align-items: stretch; }
+.generate-row input { flex: 1; min-width: 0; }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 .75rem;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: .5rem;
+  cursor: pointer;
+}
+.icon-btn:active { transform: translateY(1px); }
+.icon-btn .btn-label { font-size: .95rem; }
+
+/* eye icon: closed (default = masked) shows the slashed eye */
+#revealBtn .eye-closed { display: none; }
+#revealBtn.revealed .eye-open { display: none; }
+#revealBtn.revealed .eye-closed { display: block; }
 
 button {
   min-height: 44px;          /* touch target */

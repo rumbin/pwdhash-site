@@ -15,7 +15,8 @@
 function Init() {
   document.hashform.domain.value = "http://www.example.com/";
   document.hashform.sitePassword.value = "";
-  document.hashform.hashedPassword.value = "Press Generate";
+  document.hashform.hashedPassword.value = "";
+  document.hashform.hashedPassword.placeholder = "Press Generate";
   document.hashform.hashedPassword.disabled = true;
 }
 
@@ -39,6 +40,46 @@ function setStripProtocol(v) {
   SPH_stripProtocol = !!v;
   var cb = document.getElementById('stripSwitch');
   if (cb) cb.checked = SPH_stripProtocol;
+}
+
+var SPH_revealed = false;
+
+function isRevealed() { return SPH_revealed; }
+
+function toggleReveal() {
+  SPH_revealed = !SPH_revealed;
+  var field = document.hashform.hashedPassword;
+  if (field) field.type = SPH_revealed ? 'text' : 'password';
+  var btn = document.getElementById('revealBtn');
+  if (btn) {
+    btn.setAttribute('aria-pressed', SPH_revealed ? 'true' : 'false');
+    btn.setAttribute('aria-label', SPH_revealed ? 'Hide password' : 'Reveal password');
+    if (btn.classList) btn.classList.toggle('revealed', SPH_revealed);
+  }
+}
+
+function copyHashedPassword() {
+  var field = document.hashform.hashedPassword;
+  var value = field ? field.value : '';
+  function done() {
+    var btn = document.getElementById('copyBtn');
+    if (!btn) return;
+    var target = btn.querySelector ? (btn.querySelector('.btn-label') || btn) : btn;
+    var original = target.getAttribute('data-label') || target.textContent;
+    target.setAttribute('data-label', original);
+    target.textContent = 'Copied!';
+    setTimeout(function () { target.textContent = original; }, 1500);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(value).then(done);
+  }
+  // fallback for non-secure contexts (e.g. saved page opened from disk)
+  if (field) {
+    field.focus();
+    field.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    done();
+  }
 }
 
 var SPH_algorithm = 'v1';

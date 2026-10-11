@@ -51,17 +51,6 @@ function setCaseInsensitive(v) {
   UpdateHash();
 }
 
-var SPH_stripProtocol = true;
-
-function isStripProtocol() { return SPH_stripProtocol; }
-
-function setStripProtocol(v) {
-  SPH_stripProtocol = !!v;
-  var cb = document.getElementById('stripSwitch');
-  if (cb) cb.checked = SPH_stripProtocol;
-  UpdateHash();
-}
-
 var SPH_revealed = false;
 
 function isRevealed() { return SPH_revealed; }
@@ -121,8 +110,10 @@ function setAlgorithm(v) {
 function Generate()
 {
   var uri = document.hashform.domain.value;
-  if (SPH_stripProtocol)
-    uri = uri.replace(/^https?:\/\//i, '');
+  // upstream contract: the protocol is always stripped (case-insensitively,
+  // unlike upstream's case-sensitive replace, so HTTPS:// cannot leak a
+  // garbage realm into the hash)
+  uri = uri.replace(/^https?:\/\//i, '');
   var domain = (new SPH_DomainExtractor()).extractDomain(uri);
   if (SPH_caseInsensitive)
     domain = domain.toLowerCase();

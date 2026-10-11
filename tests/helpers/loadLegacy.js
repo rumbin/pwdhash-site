@@ -31,8 +31,6 @@ export function mountForm({ domain = '', sitePassword = '', hashedPassword = '' 
       <button type="button" id="copyBtn" onclick="copyHashedPassword()">Copy</button>
       <label><input type="checkbox" id="caseSwitch" checked
         onchange="setCaseInsensitive(this.checked)" /></label>
-      <label><input type="checkbox" id="stripSwitch" checked
-        onchange="setStripProtocol(this.checked)" /></label>
       <label><input type="checkbox" id="algoSwitch"
         onchange="setAlgorithm(this.checked ? 'v2' : 'v1')" /></label>
       <span id="algoBadge">v1</span>

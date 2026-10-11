@@ -1,17 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { loadLegacy, loadExtended, mountForm } from './helpers/loadLegacy.js'
 
-describe('strip http(s) switch', () => {
+// Upstream contract: the protocol is always stripped from the site address.
+// (Upstream's extractDomain does this case-sensitively; this fork strips
+// case-insensitively so 'HTTPS://...' cannot leak a garbage realm into the hash.)
+describe('http(s):// is always stripped from the site address', () => {
   beforeEach(() => {
     loadLegacy()
-  })
-
-  it('is enabled by default', () => {
     mountForm({ domain: 'example.com', sitePassword: 'test' })
-    expect(isStripProtocol()).toBe(true)
   })
 
-  it('strips https:// and http:// from the site address before hashing (v1)', () => {
+  it('strips https:// and http://', () => {
     for (const addr of ['https://example.com', 'http://example.com', 'http://www.example.com/x']) {
       mountForm({ domain: addr, sitePassword: 'test' })
       window.GenerateToTextField()
@@ -19,42 +18,28 @@ describe('strip http(s) switch', () => {
     }
   })
 
-  it('strips the protocol case-insensitively (upstream bug: uppercase protocol broke extraction)', () => {
-    mountForm({ domain: 'HTTPS://example.com', sitePassword: 'test' })
-    window.GenerateToTextField()
-    expect(document.hashform.hashedPassword.value).toBe('MeJ8G9')
+  it('strips mixed-case protocols too (upstream bug fix)', () => {
+    for (const addr of ['HTTPS://example.com', 'Http://Example.com', 'HTTPS://Example.COM/x']) {
+      mountForm({ domain: addr, sitePassword: 'test' })
+      window.GenerateToTextField()
+      expect(document.hashform.hashedPassword.value).toBe('MeJ8G9')
+    }
   })
 
-  it('applies to v2 as well', () => {
+  it('strips in v2 mode too', () => {
     loadExtended()
     setAlgorithm('v2')
     mountForm({ domain: 'HTTPS://example.com', sitePassword: 'test' })
     window.GenerateToTextField()
-    expect(document.hashform.hashedPassword.value).toBe('Uay)PZm%#3}v') // == plain 'example.com'
+    expect(document.hashform.hashedPassword.value).toBe('Uay)PZm%#3}v')
   })
 
-  it('OFF restores legacy parsing (no stripping in Generate)', () => {
-    setStripProtocol(false)
-    expect(isStripProtocol()).toBe(false)
-    mountForm({ domain: 'HTTPS://example.com', sitePassword: 'test' })
-    window.GenerateToTextField()
-    // legacy extractDomain leaves the uppercase protocol as garbage realm
-    expect(document.hashform.hashedPassword.value).not.toBe('MeJ8G9')
-  })
-
-  it('OFF keeps upstream behavior for lowercase protocols', () => {
-    // extractDomain itself strips lowercase http(s):// — unchanged legacy path
-    setStripProtocol(false)
-    mountForm({ domain: 'https://example.com', sitePassword: 'test' })
+  it('plain domains are unaffected', () => {
+    mountForm({ domain: 'example.com', sitePassword: 'test' })
     window.GenerateToTextField()
     expect(document.hashform.hashedPassword.value).toBe('MeJ8G9')
-  })
-
-  it('syncs the checkbox state', () => {
-    mountForm({ domain: 'example.com', sitePassword: 'test' })
-    setStripProtocol(false)
-    expect(document.getElementById('stripSwitch').checked).toBe(false)
-    setStripProtocol(true)
-    expect(document.getElementById('stripSwitch').checked).toBe(true)
+    mountForm({ domain: 'Example.com', sitePassword: 'test' })
+    window.GenerateToTextField()
+    expect(document.hashform.hashedPassword.value).toBe('MeJ8G9') // case switch ON
   })
 })

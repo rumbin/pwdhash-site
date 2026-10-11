@@ -29,7 +29,7 @@ export function mountForm({ domain = '', sitePassword = '', hashedPassword = '' 
         onchange="setCaseInsensitive(this.checked)" /></label>
       <label><input type="checkbox" id="algoSwitch"
         onchange="setAlgorithm(this.checked ? 'v2' : 'v1')" /></label>
-      <span id="algoBadge"></span>
+      <span id="algoBadge">v1</span>
     </form>`
   // jsdom lacks named form-control access (form.domain); browsers have it.
   // Shim it so unmodified legacy code (document.hashform.domain.value) works.

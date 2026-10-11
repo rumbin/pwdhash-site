@@ -31,6 +31,18 @@ function setCaseInsensitive(v) {
   if (cb) cb.checked = SPH_caseInsensitive;
 }
 
+var SPH_algorithm = 'v1';
+
+function getAlgorithm() { return SPH_algorithm; }
+
+function setAlgorithm(v) {
+  SPH_algorithm = (v == 'v2') ? 'v2' : 'v1';
+  var cb = document.getElementById('algoSwitch');
+  if (cb) cb.checked = (SPH_algorithm == 'v2');
+  var badge = document.getElementById('algoBadge');
+  if (badge) badge.textContent = SPH_algorithm;
+}
+
 /*
  * Returns a conforming hashed password generated from the form's field values.
  */
@@ -44,6 +56,8 @@ function Generate()
   var data = document.hashform.sitePassword.value;
   if (data.substring(0, size) == SPH_kPasswordPrefix)
     data = data.substring(size);
+  if (SPH_algorithm == 'v2')
+    return SPH_ExtendedHashedPassword(data, domain);
   var result = new String(new SPH_HashedPassword(data, domain));
   return result;
 }

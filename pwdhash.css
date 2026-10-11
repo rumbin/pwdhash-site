@@ -4,99 +4,114 @@
  * Contributors: Dan Boneh, Collin Jackson, John Mitchell, Nick Miyake, and Blake Ross
  * Distributed under the BSD License
  * See http://crypto.stanford.edu/PwdHash for more info.
+ *
+ * Rewritten responsive (mobile-first) for the self-hosted fork;
+ * classes match the fork's semantic index.html.
  */
 
-body 
-{ 
-  font-family: sans-serif; 
-  margin: 25px 25px 25px 25px; 
-  text-align: center; 
-  font-size: smaller;
+:root {
+  --fg: #1a202c;
+  --muted: #4a5568;
+  --accent: #2b6cb0;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e2e8f0; --muted: #a0aec0; --accent: #63b3ed;
+    --bg: #1a202c; --card: #2d3748; --border: #4a5568;
+  }
 }
 
-table#theHashForm 
-{ 
-  border: 3px solid green; 
-  margin-left: auto; 
-  margin-right: auto; 
-  text-align: center;
-} 
+* { box-sizing: border-box; }
 
-versionlinks
-{
-  padding: 0em 1em 1em 1em;
-  text-align: center;
+body {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 34rem;
+  font: 16px/1.5 system-ui, -apple-system, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
 }
 
-table#theHashForm h3 
-{ 
-  margin: 5px 0px 5px 0px; 
+header { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; }
+header h1 { font-size: 1.5rem; margin: 0; }
+.tagline { color: var(--muted); margin-top: 0; }
+
+form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: .75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-table#theHashForm p 
-{ 
-  margin: 2px 2px 2px 2px; 
+.step h2 { font-size: .95rem; margin: 0 0 .4rem; color: var(--muted); }
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  font-size: 16px;          /* >=16px: prevents iOS zoom-on-focus */
+  padding: .75rem .9rem;
+  border: 1px solid var(--border);
+  border-radius: .5rem;
+  color: var(--fg);
+  background: var(--bg);
+}
+input[readonly] { opacity: .9; }
+
+.generate-row { display: flex; gap: .6rem; }
+.generate-row input { flex: 1; }
+
+button {
+  min-height: 44px;          /* touch target */
+  min-width: 7rem;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: .5rem;
+  cursor: pointer;
+}
+button:active { transform: translateY(1px); }
+
+.switch-row { display: flex; flex-direction: column; gap: .75rem; }
+.switch-row label {
+  display: flex;
+  gap: .6rem;
+  align-items: flex-start;
+  font-size: .9rem;
+  color: var(--muted);
+}
+.switch-row input[type="checkbox"] {
+  width: 1.15rem; height: 1.15rem;
+  margin-top: .15rem;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+.badge {
+  display: inline-block;
+  padding: 0 .35em;
+  border: 1px solid var(--border);
+  border-radius: .3rem;
+  font-size: .8em;
+  background: var(--bg);
+  color: var(--fg);
 }
 
-div#theexplanation 
-{
-  font-size: larger;
-  display:block;
-  text-align: left; 
+.explanation { margin: 1.5rem 0; color: var(--muted); font-size: .9rem; }
+.explanation a { color: var(--accent); }
+kbd {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: .25rem; padding: 0 .3em;
 }
+.footnote { font-size: .8rem; }
 
-div#theexplanation li
-{
-  padding-bottom: 1em;
+@media (max-width: 30rem) {
+  .generate-row { flex-direction: column; }
+  button { width: 100%; }
 }
-
-div.parameterList 
-{ 
-  padding: 0px 2px 0px 10px; 
-  text-align: left;
-}
-
-td.stepList 
-{ 
-  padding: 0px 5px 0px 5px; 
-  vertical-align: top; 
-} 
-
-div.step 
-{ 
-  display:block; 
-  padding: 0px 0px 0px 0px; 
-}
-
-
-h1 
-{ 
-  text-align: center; 
-}
-
-div.footer 
-{
- font-size: xx-small;
- text-align: center; 
-}
-
-#theHashedPassword
-{
-  text-align: center;
-}
-
-#theToggleModeLink
-{
-  font-size: xx-small;
-}
-
-.notification
-{
-  font-color: green;
-}
-
-.warning
-{
-  font-color: red;
-}
-

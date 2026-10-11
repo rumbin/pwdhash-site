@@ -1,9 +1,79 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="refresh" content="0;url=https://pwdhash.github.io/website/" />
-<meta name="google-site-verification" content="tsC40Go6u6ldH1pmeafOZhKJc7v1dxGQ6lYzxqlkN2I" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PwdHash</title>
+  <link rel="stylesheet" href="pwdhash.css" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <script src="md5.js"></script>
+  <script src="pwdhash.js"></script>
+  <script src="hashed-password.js"></script>
+  <script src="domain-extractor.js"></script>
+  <script src="extended-hashed-password.js"></script>
 </head>
-<body>
-	This site has <a href="https://pwdhash.github.io/website/">moved</a>.
+<body onLoad="Init();">
+  <header>
+    <img src="stanford_seal64.gif" alt="Stanford" width="64" height="64" />
+    <h1>Stanford PwdHash</h1>
+  </header>
+
+  <main>
+    <p class="tagline">Generates theft-resistant, site-specific passwords &mdash;
+      computed entirely in your browser, nothing is ever sent anywhere.</p>
+
+    <form name="hashform" action="error.html" method="POST"
+          onsubmit="setTimeout('GenerateToTextField()', 0); return false;">
+      <div class="step">
+        <h2><label for="f-domain">Site Address</label></h2>
+        <input type="text" id="f-domain" name="domain"
+               autocomplete="off" autocapitalize="off" spellcheck="false"
+               inputmode="url" placeholder="example.com" />
+      </div>
+
+      <div class="step">
+        <h2><label for="f-sitePassword">Site Password</label></h2>
+        <input type="password" id="f-sitePassword" name="sitePassword"
+               autocomplete="off" />
+      </div>
+
+      <div class="switch-row">
+        <label>
+          <input type="checkbox" id="caseSwitch" checked
+                 onchange="setCaseInsensitive(this.checked)" />
+          Case-insensitive site address (recommended &mdash; matches the browser extension)
+        </label>
+        <label>
+          <input type="checkbox" id="algoSwitch"
+                 onchange="setAlgorithm(this.checked ? 'v2' : 'v1')" />
+          Extended character set <span id="algoBadge" class="badge">v1</span>
+          &mdash; larger alphabet, always includes a special, ~2&times; length.
+          Not reproducible by the Stanford browser extensions.
+        </label>
+      </div>
+
+      <div class="step">
+        <h2><label for="f-hashedPassword">Hashed Password</label></h2>
+        <div class="generate-row">
+          <input type="text" id="f-hashedPassword" name="hashedPassword" readonly />
+          <button type="submit">Generate</button>
+        </div>
+      </div>
+    </form>
+
+    <section class="explanation">
+      <p>Install the browser extension to generate these passwords invisibly as
+        you browse:
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/pwdhash/">Firefox</a> &middot;
+        <a href="https://chrome.google.com/extensions/detail/dnfmcfhnhnpoehjoommondmlmhdoonca">Chrome</a>.
+        Press <kbd>F2</kbd> or prefix passwords with <code>@@</code> to activate.</p>
+      <p><a href="http://crypto.stanford.edu/PwdHash/">Stanford project</a> &middot;
+        <a href="http://crypto.stanford.edu/PwdHash/pwdhash.pdf">USENIX 2005 paper</a> &middot;
+        <a href="https://github.com/rumbin/pwdhash-site">source</a></p>
+      <p class="footnote">Self-hosted fork of
+        <a href="https://github.com/collinjackson/pwdhash-website">pwdhash-website</a>.
+        BSD License. Tip: you can save this page to disk and use it offline.</p>
+    </section>
+  </main>
 </body>
 </html>
